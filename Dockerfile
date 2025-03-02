@@ -44,7 +44,4 @@ ADD . /workspace
 
 SHELL ["/bin/bash", "-c"]
 
-ENV HTTP_PROXY="http://pac.qunhequnhe.com:8080"
-ENV HTTPS_PROXY="http://pac.qunhequnhe.com:8080"
-
 RUN conda create -y -n mast3r-slam python=3.11 && source activate mast3r-slam && pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && conda install -y cmake && conda install -y conda-forge::ninja && conda install -y nvidia/label/cuda-12.4.0::cuda-toolkit && conda install -y pytorch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 pytorch-cuda=12.4 -c pytorch -c nvidia && pip install -e thirdparty/mast3r && pip install -e thirdparty/in3d && pip install --no-build-isolation -e .
