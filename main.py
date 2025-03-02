@@ -8,6 +8,7 @@ import lietorch
 import torch
 import tqdm
 import yaml
+import dataclasses
 from mast3r_slam.global_opt import FactorGraph
 
 from mast3r_slam.config import load_config, config, set_global_config
@@ -21,8 +22,15 @@ from mast3r_slam.mast3r_utils import (
 )
 from mast3r_slam.multiprocess_utils import new_queue, try_get_msg
 from mast3r_slam.tracker import FrameTracker
-from mast3r_slam.visualization import WindowMsg, run_visualization
 import torch.multiprocessing as mp
+
+
+@dataclasses.dataclass
+class WindowMsg:
+    is_terminated: bool = False
+    is_paused: bool = False
+    next: bool = False
+    C_conf_threshold: float = 1.5
 
 
 def relocalization(frame, keyframes, factor_graph, retrieval_database):
@@ -154,7 +162,6 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", default="datasets/tum/rgbd_dataset_freiburg1_desk")
     parser.add_argument("--config", default="config/base.yaml")
     parser.add_argument("--save-as", default="default")
-    parser.add_argument("--no-viz", action="store_true")
     parser.add_argument("--calib", default="")
 
     args = parser.parse_args()
@@ -164,8 +171,8 @@ if __name__ == "__main__":
     print(config)
 
     manager = mp.Manager()
-    main2viz = new_queue(manager, args.no_viz)
-    viz2main = new_queue(manager, args.no_viz)
+    main2viz = new_queue(manager, True)
+    viz2main = new_queue(manager, True)
 
     dataset = load_dataset(args.dataset)
     dataset.subsample(config["dataset"]["subsample"])
@@ -185,13 +192,6 @@ if __name__ == "__main__":
 
     keyframes = SharedKeyframes(manager, h, w)
     states = SharedStates(manager, h, w)
-
-    if not args.no_viz:
-        viz = mp.Process(
-            target=run_visualization,
-            args=(config, states, keyframes, main2viz, viz2main),
-        )
-        viz.start()
 
     model = load_mast3r(device=device)
     model.share_memory()
@@ -331,5 +331,3 @@ if __name__ == "__main__":
 
     print("done")
     backend.join()
-    if not args.no_viz:
-        viz.join()

@@ -13,4 +13,4 @@ ADD . /workspace
 
 SHELL ["/bin/bash", "-c"]
 
-RUN source activate layoutlab && pip install -e thirdparty/mast3r && pip install -e thirdparty/in3d && pip install --no-build-isolation -e .
+RUN source activate layoutlab && pip install -e thirdparty/mast3r && pip install --no-build-isolation -e .
