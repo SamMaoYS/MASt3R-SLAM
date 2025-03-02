@@ -13,4 +13,7 @@ ADD . /workspace
 
 SHELL ["/bin/bash", "-c"]
 
+ENV HTTP_PROXY="http://pac.qunhequnhe.com:8080"
+ENV HTTPS_PROXY="http://pac.qunhequnhe.com:8080"
+
 RUN source activate layoutlab && pip install -e thirdparty/mast3r && pip install --no-build-isolation -e .
