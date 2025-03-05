@@ -52,6 +52,9 @@ pip install -e thirdparty/mast3r
 pip install -e thirdparty/in3d
 pip install --no-build-isolation -e .
  
+
+# Optionally install torchcodec for faster mp4 loading
+pip install torchcodec==0.1
 ```
 
 Setup the checkpoints for MASt3R and retrieval.  The license for the checkpoints and more information on the datasets used is written [here](https://github.com/naver/mast3r/blob/mast3r_sfm/CHECKPOINTS_NOTICE).
